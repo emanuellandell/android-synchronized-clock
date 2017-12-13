@@ -2,7 +2,7 @@ package com.spktools.emanuel.android_synchronized_clock;
 
 import android.widget.TextView;
 
-public class UpdateTime extends Thread implements Runnable {
+class UpdateTime extends Thread implements Runnable {
 
     private TextView m_view;
     private NTPTime m_ntp_time = null;
@@ -38,7 +38,7 @@ public class UpdateTime extends Thread implements Runnable {
         return this.m_bFallback;
     }
 
-    public void update() {
+    private void update() {
 
         TimeController d = getLocalTime();
 

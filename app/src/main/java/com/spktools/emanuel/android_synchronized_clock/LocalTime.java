@@ -13,9 +13,9 @@ class LocalTime extends TimeController {
     /***
      * return device local unix timestamp
      *
-     * @return
+     * @return long
      */
-    public long getDeviceTimestamp() {
+    private long getDeviceTimestamp() {
         return (int) (System.currentTimeMillis() / 1000L);
     }
 }

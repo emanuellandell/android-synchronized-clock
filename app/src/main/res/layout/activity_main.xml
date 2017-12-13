@@ -10,7 +10,7 @@
         android:id="@+id/field_clock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="loading time"
+        android:text="@string/loading_time"
         android:textSize="100sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -23,6 +23,8 @@
         android:layout_height="wrap_content"
         app:srcCompat="@android:drawable/presence_online"
         tools:layout_editor_absoluteX="350dp"
-        tools:layout_editor_absoluteY="472dp" />
+        tools:layout_editor_absoluteY="472dp"
+        android:contentDescription="@string/ntp_status"
+        tools:ignore="MissingConstraints" />
 
 </android.support.constraint.ConstraintLayout>

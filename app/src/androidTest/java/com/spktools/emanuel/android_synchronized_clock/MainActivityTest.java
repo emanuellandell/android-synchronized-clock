@@ -6,7 +6,6 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import com.spktools.emanuel.android_synchronized_clock.MainActivity;
 
 import static org.junit.Assert.*;
 
@@ -21,15 +20,5 @@ public class MainActivityTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertEquals("com.spktools.emanuel.android_synchronized_clock", appContext.getPackageName());
-    }
-
-    public void getDate() throws Exception {
-
-
-
-        // Context of the app under test.
-        //Context appContext = InstrumentationRegistry.getTargetContext();
-
-        //assertEquals("com.spktools.emanuel.android_synchronized_clock", appContext.getPackageName());
     }
 }

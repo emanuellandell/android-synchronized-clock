@@ -10,7 +10,9 @@ import java.net.UnknownHostException;
 import java.util.Date;
 
 /***
- * 
+ * NTPTime
+ *
+ * this class is managing our NTP requests
  */
 public class NTPTime extends TimeController{
 
@@ -18,10 +20,14 @@ public class NTPTime extends TimeController{
         return this.getTime("pool.ntp.org");
     }
 
-    public long getTime( String hostName ) {
+    /**
+     * @param hostName NTP server
+     * @return long
+     */
+    private long getTime( String hostName ) {
 
         TimeInfo timeInfo;
-        InetAddress hostAddr;
+        InetAddress hostAddress;
 
         NTPUDPClient client = new NTPUDPClient();
 
@@ -35,13 +41,13 @@ public class NTPTime extends TimeController{
 
         // use host name or IP address of target NTPTime server
         try {
-            hostAddr = InetAddress.getByName(hostName);
+            hostAddress = InetAddress.getByName(hostName);
         } catch(UnknownHostException e) {
             System.out.println("UnknownHostException");
             return 0;
         }
         try {
-            timeInfo = client.getTime(hostAddr);
+            timeInfo = client.getTime(hostAddress);
 
         } catch(IOException e) {
             System.out.println("IOException");
