@@ -9,19 +9,24 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Date;
 
+
 /***
  * NTPTime
  *
  * this class is managing our NTP requests
  */
-public class NTPTime extends TimeController{
+public class NTPTime implements TimeInterface {
 
     private NTPUDPClient m_client = null;
-    private String m_ntp_host = "pool.ntp.org"; // time-a.nist.gov
+    private static final String m_ntp_host = "pool.ntp.org";
 
     private long mDiff = 0;
     private long mLastSync = 0;
     private int mSyncInterval = 60;
+
+    // to avoid injecting bad NTP time, we reject any time fixes that differ from system time
+    // by more than 5 minutes.
+    private static final long MAX_NTP_SYSTEM_TIME_OFFSET = 5*60*1000;
 
     /***
      *
@@ -86,19 +91,29 @@ public class NTPTime extends TimeController{
         return timeInfo;
     }
 
-    public long lastUpdated() {
+    /**
+     * lastUpdated
+     *
+     * returns time in seconds when we requested ntp time last
+     *
+     * @return
+     */
+    private long lastUpdated() {
         long local = System.currentTimeMillis();
 
         if((int)((local - mLastSync) / 1000L)>mSyncInterval) {
-            mLastSync = 0;
+            return (mLastSync = 0);
         }
 
-        return mLastSync;
+        return (local - mLastSync) / 1000L;
     }
 
     /**
+     * getDiff
      *
-     * @return
+     * calculates the differance between system clock and ntp device
+     *
+     * @return long
      */
     public long getDiff() {
 
@@ -126,6 +141,7 @@ public class NTPTime extends TimeController{
 
     /**
      * getDiff
+     *
      * @param local
      * @param remote
      * @return long
@@ -134,16 +150,16 @@ public class NTPTime extends TimeController{
 
         mLastSync = local;
 
-        mDiff = remote - local;
+        if(mDiff>MAX_NTP_SYSTEM_TIME_OFFSET) {
+            return (mDiff = 0);
+        }
 
-        System.out.println( "NTP time differs from system time by " + mDiff + "ms." );
-        System.out.println(new Date(remote));
-        System.out.println(new Date(local));
-
-        return mDiff;
+        return (mDiff = remote - local);
     }
 
     /**
+     * getTime
+     *
      * @param hostName NTP server
      * @return long
      */
@@ -160,11 +176,7 @@ public class NTPTime extends TimeController{
         long offsetValue = timeInfo.getOffset();
         long delayValue = timeInfo.getDelay();
 
-        long serverTime = timeInfo.getMessage().getTransmitTimeStamp().getTime();
-
-        Date time = new Date(serverTime);
-
-        return time.getTime() / 1000L;
+        return timeInfo.getMessage().getTransmitTimeStamp().getTime();
     }
 }
 

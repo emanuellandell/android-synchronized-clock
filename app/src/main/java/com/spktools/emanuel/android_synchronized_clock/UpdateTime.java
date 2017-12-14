@@ -4,8 +4,6 @@ import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.apache.commons.net.ntp.TimeInfo;
-
 class UpdateTime extends Thread implements Runnable {
 
     private TextView mTextView = null;
@@ -106,9 +104,9 @@ class UpdateTime extends Thread implements Runnable {
     /**
      * get instance of NTPTime
      *
-     * @return TimeController
+     * @return Toolbox
      */
-    private TimeController getNtpTime() {
+    private NTPTime getNtpTime() {
         if(m_ntp_time==null) {
             m_ntp_time = new NTPTime();
         }
@@ -117,10 +115,9 @@ class UpdateTime extends Thread implements Runnable {
     }
 
     /**
-     *
-     * @return TimeController
+     * @return Toolbox
      */
-    private TimeController getLocalTime() {
+    private LocalTime getLocalTime() {
         if(m_local_time==null) {
             m_local_time = new LocalTime();
         }
@@ -128,8 +125,25 @@ class UpdateTime extends Thread implements Runnable {
         return m_local_time;
     }
 
+    /**
+     * isFallback
+     *
+     * returns true if we are using device time
+     *
+     * @return
+     */
     public boolean isFallback() {
         return this.m_bFallback;
+    }
+
+    /**
+     * getDeviceTime
+     *
+     * @return long
+     */
+    private long getDeviceTime() {
+        // update the system device time
+        return (mDeviceTime = this.getLocalTime().getTime());
     }
 
     /**
@@ -138,9 +152,6 @@ class UpdateTime extends Thread implements Runnable {
      * Here it's decided which source to use for time
      */
     private void update() {
-
-        // update the system device time
-        mDeviceTime = this.getLocalTime().getTime();
 
         long remote_time = this.getNtpTime().getTime();
 
@@ -159,15 +170,9 @@ class UpdateTime extends Thread implements Runnable {
      * Here we update the UI
      */
     private void render() {
-        TimeController d = getLocalTime();
-        String newTime = d.formatMilitaryTime(mDeviceTime + mDiff);
-
-        //System.out.println("UpdateTime:Render:LocalTime "+localTime);
-        //System.out.println("UpdateTime:Render:mDiff "+mDiff);
-        //System.out.println("UpdateTime:Render:newTime "+newTime);
 
         if( mTextView != null ) {
-            mTextView.setText(newTime);
+            mTextView.setText( Toolbox.formatMilitaryTime(getDeviceTime() + (mDiff / 1000L)) );
         }
 
         if( mImageView != null) {

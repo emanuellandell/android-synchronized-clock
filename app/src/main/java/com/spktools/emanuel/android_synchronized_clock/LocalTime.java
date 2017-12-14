@@ -1,9 +1,9 @@
 package com.spktools.emanuel.android_synchronized_clock;
 
 /***
- *
+ * device functions for device clock
  */
-class LocalTime extends TimeController {
+class LocalTime implements TimeInterface {
 
     @Override
     public long getTime() {

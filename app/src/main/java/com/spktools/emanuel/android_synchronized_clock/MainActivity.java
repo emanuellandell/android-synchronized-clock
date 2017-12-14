@@ -80,8 +80,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        System.out.println("MainActivity:onResume");
-
         synchronized (mPauseLock) {
             mPaused = false;
             mPauseLock.notifyAll();
@@ -92,8 +90,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
-        System.out.println("MainActivity:onPause");
 
         synchronized (mPauseLock) {
             mPaused = true;
